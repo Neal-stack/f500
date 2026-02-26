@@ -1,15 +1,15 @@
-import localFont from "next/font/local";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const geistSans = Inter({
   variable: "--font-geist-sans",
-  weight: "100 900",
+  subsets: ["latin"],
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+
+const geistMono = JetBrains_Mono({
   variable: "--font-geist-mono",
-  weight: "100 900",
+  subsets: ["latin"],
 });
 
 export const metadata = {
@@ -18,26 +18,45 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const navItems = [
+    { href: "/stocks", label: "Stocks" },
+    { href: "/news", label: "News" },
+    { href: "/timeline", label: "Timeline" },
+    { href: "/strategies", label: "Strategies" },
+  ];
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <header className="border-b border-neutral-800/30 bg-black/20 backdrop-blur">
-          <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-            <a href="/" className="text-xl font-semibold">F500</a>
-            <nav className="flex items-center gap-6 text-sm">
-              <a href="/" className="hover:underline">Home</a>
-              <a href="/timeline" className="hover:underline">Timeline</a>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-xl">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+            <div className="flex items-center">
+              <Link
+                href="/"
+                className="rounded-xl px-4 py-2 text-sm font-medium bg-white/10 hover:bg-white/20 border border-white/10 transition"
+              >
+                F500
+              </Link>
+            </div>
+            <nav className="flex items-center gap-1 text-sm">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-lg px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white transition"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </nav>
           </div>
         </header>
-        <main className="mx-auto max-w-6xl px-4 py-8">
+        <main className="mx-auto max-w-6xl px-4 pb-8 pt-28 md:pt-32">
           {children}
         </main>
-        <footer className="border-t border-neutral-800/30 mt-8">
-          <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-neutral-400">
-            © {new Date().getFullYear()} F500. All rights reserved.
+        <footer className="mt-10 border-t border-white/10">
+          <div className="mx-auto max-w-6xl px-4 py-8 text-sm muted-text">
+            © {new Date().getFullYear()} F500. Built for quick earnings tracking.
           </div>
         </footer>
       </body>
