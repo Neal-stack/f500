@@ -1,4 +1,4 @@
-const FMP_BASE_URL = "https://financialmodelingprep.com/api/v3";
+const FMP_BASE_URL = "https://financialmodelingprep.com/stable";
 const FINNHUB_BASE_URL = "https://finnhub.io/api/v1";
 const FRED_BASE_URL = "https://api.stlouisfed.org/fred";
 const OPENAI_BASE_URL = "https://api.openai.com/v1";
@@ -26,14 +26,21 @@ async function safeJsonFetch(url, options = {}) {
 }
 
 export async function fetchFmp(path) {
-  const apiKey = requiredEnv("FMP_API_KEY");
-  const joinChar = path.includes("?") ? "&" : "?";
-  const url = `${FMP_BASE_URL}${path}${joinChar}apikey=${apiKey}`;
+  const apiKey = requiredEnv("FMP_API_KEY").trim();
+  if (apiKey.includes("your_") || apiKey.includes("_here")) {
+    throw new Error(
+      "FMP_API_KEY is still a placeholder. Save your real key in .env.local and restart the dev server."
+    );
+  }
+
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  const joinChar = cleanPath.includes("?") ? "&" : "?";
+  const url = `${FMP_BASE_URL}/${cleanPath}${joinChar}apikey=${apiKey}`;
   return safeJsonFetch(url);
 }
 
 export async function fetchFinnhub(path) {
-  const apiKey = requiredEnv("FINNHUB_API_KEY");
+  const apiKey = requiredEnv("FINNHUB_API_KEY").trim();
   const joinChar = path.includes("?") ? "&" : "?";
   const url = `${FINNHUB_BASE_URL}${path}${joinChar}token=${apiKey}`;
   return safeJsonFetch(url);

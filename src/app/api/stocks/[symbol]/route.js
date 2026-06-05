@@ -13,10 +13,10 @@ export async function GET(_request, { params }) {
 
   try {
     const [profile, financials, ratios, earnings] = await Promise.all([
-      fetchFmp(`/profile/${symbol}`),
-      fetchFmp(`/income-statement/${symbol}?period=annual&limit=4`),
-      fetchFmp(`/ratios/${symbol}?period=annual&limit=4`),
-      fetchFmp(`/historical/earning_calendar/${symbol}?limit=8`),
+      fetchFmp(`profile?symbol=${symbol}`),
+      fetchFmp(`income-statement?symbol=${symbol}&period=annual&limit=4`),
+      fetchFmp(`ratios?symbol=${symbol}&period=annual&limit=4`),
+      fetchFmp(`earnings?symbol=${symbol}&limit=8`),
     ]);
 
     const profileEntry = compactArray(profile)[0] || {};
